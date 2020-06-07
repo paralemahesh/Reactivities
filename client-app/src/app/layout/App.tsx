@@ -2,16 +2,19 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import Chip from '@material-ui/core/Chip';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
 import ListItemText from '@material-ui/core/ListItemText';
+import { IActivity } from '../models/activity';
 
-class App extends Component {
-  state = {
-    values : []
+interface IState {
+  activities: IActivity[]
+}
+
+class App extends Component<{}, IState> {
+  readonly state: IState = {
+    activities : []
   }
 
   render() {
@@ -27,16 +30,17 @@ class App extends Component {
         </AppBar>
 
         <List component="nav" aria-label="main mailbox folders">
-          {this.state.values.map(i => <ListItemText primary={i.name} key={i.id}></ListItemText>)}
+          {console.log(this.state.activities)}
+          {this.state.activities.map(i => <ListItemText key={i.id}><Chip label={i.title}/></ListItemText>)}
         </List>
       </div>
     )
   }
 
   componentDidMount() {
-    axios.get("http://localhost:5000/api/values")
+    axios.get<IActivity[]>("http://localhost:5000/api/activities")
       .then((response) => {
-        this.setState({values:response.data});
+        this.setState({activities:response.data});
       })
   }
 }
